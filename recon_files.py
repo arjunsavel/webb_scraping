@@ -13,8 +13,6 @@ from pdfminer.layout import LAParams
 from pdfminer.pdfpage import PDFPage
 from io import StringIO
 
-import pandas as pd
-
 import numpy as np
 
 from astroquery.mast import Observations
