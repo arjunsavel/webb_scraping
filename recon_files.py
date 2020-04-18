@@ -18,6 +18,7 @@ import pandas as pd
 import numpy as np
 
 from astroquery.mast import Observations
+from astroquery.simbad import Simbad
 
 def convert_pdf_to_txt(path):
     rsrcmgr = PDFResourceManager()
@@ -70,6 +71,7 @@ class Recon:
     webb_approved = None
     hst_approved = None
     webb_proposal_links = []
+    webb_proposal_names = []
     hst_data = {}
     exoplanet_archive_data = {}
     arxiv_links = []
@@ -133,8 +135,7 @@ class Recon:
         self.search_ERS()
     
     def find_aliases(self):
-        name = self.input_name
-        raise NotImplementedError
+        self.aliases += list(Simbad.query_objectids(self.input_name)['ID'])
     
     def scrape_HST(self):
         """
@@ -159,25 +160,42 @@ class Recon:
         JWST_obs = obs[obs['obs_collection']=='JWST']
         if len(JWST_obs) > 0:
             self.webb_approved = True
+            for ob in JWST_obs:
+                self.webb_proposal_names.append(ob['obs_title'])
         if self.webb_approved is None:
             self.webb_approved = False
         return
         
     
-    def scrape_arxiv(self):
+    def scrape_arxiv(self, progress=False):
         """
         Searches through arxiv abstracts for the target.
         Does not take aliases into account yet.
         """
-        query_URL = f'https://arxiv.org/search/astro-ph?query={self.input_name}&searchtype=abstract&abstracts=show&order=-announced_date_first&size=50'
-        page = requests.get(query_URL)
-        soup = BeautifulSoup(page.content, 'html.parser')
-        for link in soup.find_all('a'):
-            try:
-                if 'pdf'in link.get('href'):
-                    self.arxiv_links.append(link.get('href'))
-            except TypeError:
-                continue
+        if self.aliases:
+            for alias in tqdm(self.aliases, position=0, leave=True, desc='Scraping arXiv'):
+                query_URL = f'https://arxiv.org/search/astro-ph?query={alias}&searchtype=abstract&abstracts=show&order=-announced_date_first&size=50'
+                page = requests.get(query_URL)
+                soup = BeautifulSoup(page.content, 'html.parser')
+                for link in soup.find_all('a'):
+                    try:
+                        paper = link.get('href')
+                        if 'pdf'in paper and paper not in self.arxiv_links:
+                            self.arxiv_links.append(paper)
+                    except TypeError:
+                        continue
+        else: # I'm sure there's a more elegant way to do this!
+            query_URL = f'https://arxiv.org/search/astro-ph?query={self.input_name}&searchtype=abstract&abstracts=show&order=-announced_date_first&size=50'
+            page = requests.get(query_URL)
+            soup = BeautifulSoup(page.content, 'html.parser')
+            for link in soup.find_all('a'):
+                try:
+                    paper = link.get('href')
+                    if 'pdf'in paper and paper not in self.arxiv_links:
+                        self.arxiv_links.append(paper)
+                except TypeError:
+                    continue
+            
     
     def scrape_exoplanet_archive(self):
         if not self.aliases:
@@ -185,9 +203,48 @@ class Recon:
         raise NotImplementedError
         
     def scrape_all(self):
+        self.find_aliases()
         self.scrape_arxiv()
         self.scrape_webb_MAST()
         self.scrape_HST()
         
+def scrape_all_GTO():
+    """
+    Gets all science targets of all JWST GTO programs that have hit phase 2.
+    Takes around 4 minutes on Arjun's mac.
+    
+    outputs:
+        
+    """
+    URL = 'http://www.stsci.edu/jwst/observing-programs/approved-gto-programs'
+    page = requests.get(URL)
 
+    soup = BeautifulSoup(page.content, 'html.parser')
+
+    all_targets = []
+
+    gto_pages = []
+    for link in soup.find_all('a'):
+        if link.has_attr('href'):
+            str_begin = '/jwst/observing-programs/program-information?id='
+            if link.attrs['href'][:48] == str_begin:
+                gto_page = 'http://www.stsci.edu/' + link.attrs['href'] # give better name
+                gto_pages.append(gto_page)
+
+    for gto_page in tqdm(gto_pages, position=0, leave=True):
+        ID = gto_page[-4:]
+        pdf_link = f'http://www.stsci.edu/jwst/phase2-public/{ID}.pdf'
+        urlretrieve(pdf_link, "tmp.pdf")
+        text = convert_pdf_to_txt("tmp.pdf")
+        start = text.find("Science Target") + len("Science Target")
+        end = text.find("ABSTRACT")
+        target_table = text[start:end]
+        targets = list(set(re.findall(r"""\(\d\)\ (\w+)""", target_table)))
+#         targets += list(set(re.findall(r"""\(\d\)(\w+)""", target_table)))
+        targets += list(set(re.findall(r"""\(\d\)\ (\w+-\w+)""", target_table)))
+        targets += list(set(re.findall(r"""\(\d\)\ (\w+-\w+-\w+)""", target_table))) # for HAT-P-35, for example
+        targets += list(set(re.findall(r"""\(\d\)\ (\w+ \w+)""", target_table)))
+        all_targets += targets
+        os.remove('tmp.pdf')
+    return list(set(all_targets))
         
