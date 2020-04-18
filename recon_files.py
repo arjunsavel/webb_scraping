@@ -52,19 +52,23 @@ class Recon:
         aliases : (list of strings) names by which the target is known in other catalogs.
         input_name : (str) name of target you're interested in.
         webb_approved : (bool) whether or not the target has been included in approved webb program.
+        HST_approved : (bool) whether or not the target has been included in a public HST program.
         webb_proposal_link : (list of strings) if there are associated JWST proposals, these
                                 are the associated URLs.
-        HST_data : (dict)
+        webb_proposal_names : (list of strings) if there are associated JWST proposals, these
+                                are the associated proposal names.
+        hst_data : (dict) keys are HST proposals, vals are links to associated data producs.
         exoplanet_archive_data : (dict)
-                
-
-        any other atmospheric data from exoplanet catologue
-        link to arxv scrape
-    
+        arxiv_links : (list) list to PDFs of arxiv papers that have self.input_name or self.aliases in 
+                        their abstracts
     
     Methods:
         __init__ : initializes.
-        find_aliases :
+        scrape_all : master run method.
+        find_aliases : finds aliases.
+        search_webb_site : manual scraping, not preferred.
+        
+        
     """
     aliases = []
     input_name = None
@@ -78,6 +82,15 @@ class Recon:
     
     def __init__(self, input_name):
         self.input_name = input_name
+        
+    def scrape_all(self):
+        """
+        The preferred scraping method.
+        """
+        self.find_aliases()
+        self.scrape_arxiv()
+        self.scrape_webb_MAST()
+        self.scrape_HST()
         
     def search_webb_site(self, URL):
         """
@@ -123,23 +136,36 @@ class Recon:
         return
     
     def search_GTO(self):
+        """
+        Manually scrapes the JWST GTO page.
+        """
         URL = 'http://www.stsci.edu/jwst/observing-programs/approved-gto-programs'
         self.search_webb_site(URL)
         
     def search_ERS(self):
+        """
+        Manually scrapes the JWST ERS page.
+        """
         URL = 'http://www.stsci.edu/jwst/observing-programs/approved-ers-programs'
         self.search_webb_site(URL)
         
     def search_webb(self):
+        """
+        Manually scrapes both the JWST ERS and GTO pages.
+        """
         self.search_GTO()
         self.search_ERS()
     
     def find_aliases(self):
+        """
+        Uses astroquery and Simbad to find any aliases of input_name; these are then 
+        put into the self.aliases list.
+        """
         self.aliases += list(Simbad.query_objectids(self.input_name)['ID'])
     
     def scrape_HST(self):
         """
-        Checks MAST
+        Checks MAST for the target's relevant HST proposals/data.
         Need to fill in the other stuff
         """
         obs = Observations.query_object(self.input_name, radius=".02 deg") # should work. waliases
@@ -153,8 +179,8 @@ class Recon:
         
     def scrape_webb_MAST(self):
         """
-        Uses MAST to scrape. Does not seem to work for ERS.
-        Need to fill in other stuff
+        Checks MAST for the target's relevant JWST proposals/data.
+        Need to fill in the other stuff
         """
         obs = Observations.query_object(self.input_name, radius=".02 deg") # should work. waliases
         JWST_obs = obs[obs['obs_collection']=='JWST']
@@ -170,7 +196,8 @@ class Recon:
     def scrape_arxiv(self, progress=False):
         """
         Searches through arxiv abstracts for the target.
-        Does not take aliases into account yet.
+        
+        If progress=True, outputs a tqdm progress bar.
         """
         if self.aliases:
             for alias in tqdm(self.aliases, position=0, leave=True, desc='Scraping arXiv'):
@@ -201,12 +228,7 @@ class Recon:
         if not self.aliases:
             print('Not checking aliases.')
         raise NotImplementedError
-        
-    def scrape_all(self):
-        self.find_aliases()
-        self.scrape_arxiv()
-        self.scrape_webb_MAST()
-        self.scrape_HST()
+           
         
 def scrape_all_GTO():
     """
