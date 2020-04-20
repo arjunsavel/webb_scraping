@@ -12,6 +12,7 @@ Welcome to webb_scraping's documentation!
 
    pages/about
    pages/installation
+   pages/using
 
 .. toctree::
    :maxdepth: 2
