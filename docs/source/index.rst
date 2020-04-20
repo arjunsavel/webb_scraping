@@ -13,7 +13,7 @@ Welcome to webb_scraping's documentation!
    pages/about
    pages/installation
    pages/using
-   pages/FAQ
+   ../../tutorials/scrape_example.ipynb
 
 .. toctree::
    :maxdepth: 2

@@ -12,7 +12,7 @@ from setuptools import setup, find_packages
 
 NAME = "attrs"
 PACKAGES = find_packages(where=".")
-META_PATH = os.path.join(".", "__init__.py")
+META_PATH = os.path.join("webb_scraping", "__init__.py")
 CLASSIFIERS = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
@@ -75,7 +75,7 @@ if __name__ == "__main__":
         long_description=read("README.md"),
         long_description_content_type="text/x-rst",
         packages=PACKAGES,
-        package_dir={"": "."},
+        package_dir={"": "webb_scraping"},
         zip_safe=False,
         classifiers=CLASSIFIERS,
         install_requires=INSTALL_REQUIRES,
