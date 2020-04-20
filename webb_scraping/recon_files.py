@@ -7,40 +7,12 @@ from urllib.request import urlretrieve
 import re
 
 import os
-from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
-from pdfminer.converter import TextConverter
-from pdfminer.layout import LAParams
-from pdfminer.pdfpage import PDFPage
 from io import StringIO
 
 import numpy as np
 
 from astroquery.mast import Observations
 from astroquery.simbad import Simbad
-
-def convert_pdf_to_txt(path):
-    rsrcmgr = PDFResourceManager()
-    retstr = StringIO()
-    laparams = LAParams()
-    device = TextConverter(rsrcmgr, retstr, laparams=laparams)
-    fp = open(path, 'rb')
-    interpreter = PDFPageInterpreter(rsrcmgr, device)
-    password = ""
-    maxpages = 0
-    caching = True
-    pagenos= set()
-
-    for page in PDFPage.get_pages(fp, pagenos, maxpages=maxpages, 
-                                  password=password,caching=caching, 
-                                  check_extractable=True):
-        interpreter.process_page(page)
-
-    text = retstr.getvalue()
-
-    fp.close()
-    device.close()
-    retstr.close()
-    return text
 
 class Recon:
     """
@@ -254,43 +226,4 @@ class Recon:
         self.aliases += aliases_to_add
            
         
-def scrape_all_GTO():
-    """
-    Gets all science targets of all JWST GTO programs that have hit phase 2.
-    Takes around 4 minutes on Arjun's mac.
-    
-    outputs:
-        
-    """
-    URL = 'http://www.stsci.edu/jwst/observing-programs/approved-gto-programs'
-    page = requests.get(URL)
-
-    soup = BeautifulSoup(page.content, 'html.parser')
-
-    all_targets = []
-
-    gto_pages = []
-    for link in soup.find_all('a'):
-        if link.has_attr('href'):
-            str_begin = '/jwst/observing-programs/program-information?id='
-            if link.attrs['href'][:48] == str_begin:
-                gto_page = 'http://www.stsci.edu/' + link.attrs['href'] # give better name
-                gto_pages.append(gto_page)
-
-    for gto_page in tqdm(gto_pages, position=0, leave=True):
-        ID = gto_page[-4:]
-        pdf_link = f'http://www.stsci.edu/jwst/phase2-public/{ID}.pdf'
-        urlretrieve(pdf_link, "tmp.pdf")
-        text = convert_pdf_to_txt("tmp.pdf")
-        start = text.find("Science Target") + len("Science Target")
-        end = text.find("ABSTRACT")
-        target_table = text[start:end]
-        targets = list(set(re.findall(r"""\(\d\)\ (\w+)""", target_table)))
-#         targets += list(set(re.findall(r"""\(\d\)(\w+)""", target_table)))
-        targets += list(set(re.findall(r"""\(\d\)\ (\w+-\w+)""", target_table)))
-        targets += list(set(re.findall(r"""\(\d\)\ (\w+-\w+-\w+)""", target_table))) # for HAT-P-35, for example
-        targets += list(set(re.findall(r"""\(\d\)\ (\w+ \w+)""", target_table)))
-        all_targets += targets
-        os.remove('tmp.pdf')
-    return list(set(all_targets))
         
