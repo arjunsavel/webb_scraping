@@ -36,4 +36,4 @@ class TestWebb(unittest.TestCase):
 			star_target.scrape_webb_MAST()
 			stars_webb_approved.append(star_target.webb_approved)
 
-		self.assertItemsEqual(stars_webb_approved, expected_stars_webb_approved)
+		self.assertListEqual(stars_webb_approved, expected_stars_webb_approved)
