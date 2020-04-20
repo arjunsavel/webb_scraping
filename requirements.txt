@@ -1,4 +1,4 @@
-pdfminer~=20191125
+pdfminer
 numpy~=1.18.2
 tqdm~=4.42.1
 requests~=2.22.0
