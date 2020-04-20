@@ -28,7 +28,7 @@ CLASSIFIERS = [
     'Topic :: Scientific/Engineering :: Astronomy'
 
 ]
-INSTALL_REQUIRES = ["tqdm", "numpy", "astroquery", "bs4", "requests"]
+INSTALL_REQUIRES = ["tqdm", "nbsphinx", "numpy", "astroquery", "bs4", "requests"]
 REQUIRES = ["tqdm", "numpy", "astroquery", "bs4", "requests"]
 
 ###################################################################
