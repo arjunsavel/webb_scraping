@@ -28,8 +28,7 @@ CLASSIFIERS = [
     'Topic :: Scientific/Engineering :: Astronomy'
 
 ]
-INSTALL_REQUIRES = ["pdfminer", "tqdm", "numpy", "astroquery",
-"bs4", "requests"]
+INSTALL_REQUIRES = ["pdfminer", "tqdm", "numpy", "astroquery", "bs4", "requests"]
 
 ###################################################################
 

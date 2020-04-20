@@ -14,7 +14,6 @@ from pdfminer.pdfpage import PDFPage
 from io import StringIO
 
 import numpy as np
-import ipdb
 
 from astroquery.mast import Observations
 from astroquery.simbad import Simbad
