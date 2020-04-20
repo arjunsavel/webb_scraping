@@ -20,14 +20,14 @@ class TestImports(unittest.TestCase):
 		import webb_scraping.target as t
 
 class TestWebb(unittest.TestCase):
-	import webb_scraping.target as t
-	import webb_scraping.calculations as c
 
 	def test_webb_approved(self):
 		"""
 		Take a random assortment of stars and ensure that they are
 		webb-approved if they are supposed to be.
 		"""
+		import webb_scraping.target as t
+		import webb_scraping.calculations as c
 		stars = ['GJ 357']
 		stars_webb_approved = []
 		expected_stars_webb_approved = [True]

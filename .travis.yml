@@ -31,7 +31,7 @@ install:
   - pip3 install codecov
 # command to run tests
 script:
-  - coverage run -m unittest discover
+  - coverage run -m unittest discover webb_scraping/tests
 
 env:
     - CODECOV_TOKEN="6f31505a-29d0-4e22-85a4-b88a281011bd"
