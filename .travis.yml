@@ -1,0 +1,40 @@
+language: python            # this works for Linux but is an error on macOS or Windows
+cache: pip
+jobs:
+  include:
+    # - name: "Python 3.5.4 on Windows"
+    #   os: windows           # Windows 10.0.17134 N/A Build 17134
+    #   language: shell       # 'language: python' is an error on Travis CI Windows
+    #   before_install:
+
+    #     - choco install python3 --params "/InstallDir:C:\\Python"
+    #     - set PATH=%PATH%;C:\\Python\
+    #     # - export PATH="/c/Python:/c/Python/Scripts:$PATH"
+    #     - easy_install.exe pip
+    #     - python -m pip install --upgrade pip wheel
+    - name: "Python 3.6 on Xenial Linux"
+      python: "3.6"
+      before_install: 
+        - pip3 install --upgrade pip
+    - name: "Python 3.7.4 on Xenial Linux"
+      python: "3.7.4"
+      before_install: 
+        - pip3 install --upgrade pip
+    - name: "Python 3.7.4 on macOS"
+      os: osx
+      osx_image: xcode11.2  # Python 3.7.4 running on macOS 10.14.4
+      language: shell       # 'language: python' is an error on Travis CI macOS
+      before_install: 
+        - pip3 install --upgrade pip
+install:
+  - pip3 install -r requirements.txt
+  - pip3 install codecov
+# command to run tests
+script:
+  - coverage run -m unittest discover
+
+env:
+    - CODECOV_TOKEN="6f31505a-29d0-4e22-85a4-b88a281011bd"
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash) -t 6f31505a-29d0-4e22-85a4-b88a281011bd
