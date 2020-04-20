@@ -5,3 +5,4 @@ coverage:
   range: "40...90"
   ignore:
     - "__init__.py"
+    -  "webb_scraping/__init__.py"
