@@ -28,8 +28,8 @@ CLASSIFIERS = [
     'Topic :: Scientific/Engineering :: Astronomy'
 
 ]
-INSTALL_REQUIRES = ["tqdm", "pygments>=2.4.1", "nbsphinx==0.5.1", "nbconvert<6,>=5.5.0", "numpy", "astroquery", "bs4", "requests"]
-REQUIRES = ["tqdm", "numpy", "pygments>=2.4.1",  "nbsphinx==0.5.1", "nbconvert<6,>=5.5.0", "astroquery", "bs4", "requests"]
+INSTALL_REQUIRES = ["tqdm", "astropy", "pygments>=2.4.1", "nbsphinx==0.5.1", "nbconvert<6,>=5.5.0", "numpy", "astroquery", "bs4", "requests"]
+REQUIRES = ["tqdm", "numpy", "astropy", "pygments>=2.4.1",  "nbsphinx==0.5.1", "nbconvert<6,>=5.5.0", "astroquery", "bs4", "requests"]
 
 ###################################################################
 

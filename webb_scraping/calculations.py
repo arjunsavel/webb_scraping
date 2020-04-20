@@ -2,7 +2,6 @@ import numpy as np
 import pandas as pd
 from tqdm import tqdm
 from math import sqrt
-import ipdb
 
 from astropy.modeling.physical_models import BlackBody
 from astropy import units as u
