@@ -3,4 +3,4 @@ build:
 
 python:
     version: 3.6
-    - requirements: requirements.txt
+    setup_py_install: true

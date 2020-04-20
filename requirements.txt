@@ -1,6 +1,0 @@
-pdfminer
-numpy~=1.18.2
-tqdm~=4.42.1
-requests~=2.22.0
-astroquery~=0.4
-bs4~=0.0.1
