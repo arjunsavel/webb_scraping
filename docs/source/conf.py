@@ -14,8 +14,10 @@
 #
 import os
 import sys
+import mock
 sys.path.insert(0, os.path.abspath('.'))
 sys.path.insert(0, os.path.abspath('../../'))
+
 
 
 
@@ -42,6 +44,9 @@ release = '0.1.0-beta'
 # ones.
 
 autodoc_mock_imports = ["pdfminer"]
+
+for mod_name in autodoc_mock_imports:
+   sys.modules[mod_name] = mock.Mock() 
 
 extensions = [
     'sphinx.ext.autodoc',
