@@ -46,19 +46,18 @@ class Recon:
     """
     Performance of web reconnaisanse on an interesting target.
     
-    Attributes
-    -----------
-        aliases : (list of strings) names by which the target is known in other catalogs.
-        input_name : (str) name of target you're interested in.
-        webb_approved : (bool) whether or not the target has been included in approved webb program.
-        HST_approved : (bool) whether or not the target has been included in a public HST program.
-        webb_proposal_link : (list of strings) if there are associated JWST proposals, these
+    Attributes:
+        :aliases: (list of strings) names by which the target is known in other catalogs.
+        :input_name: (str) name of target you're interested in.
+        :webb_approved: (bool) whether or not the target has been included in approved webb program.
+        :HST_approved: (bool) whether or not the target has been included in a public HST program.
+        :webb_proposal_link: (list of strings) if there are associated JWST proposals, these
                               are the associated URLs.
-        webb_proposal_names : (list of strings) if there are associated JWST proposals, these
+        :webb_proposal_names: (list of strings) if there are associated JWST proposals, these
                               are the associated proposal names.
-        hst_data : (dict) keys are HST proposals, vals are links to associated data producs.
-        exoplanet_archive_data : (dict)
-        arxiv_links : (list) list to PDFs of arxiv papers that have self.input_name or self.aliases in 
+        :hst_data: (dict) keys are HST proposals, vals are links to associated data producs.
+        :exoplanet_archive_data: (dict)
+        :arxiv_links: (list) list to PDFs of arxiv papers that have self.input_name or self.aliases in 
                       their abstracts
     
     Methods
