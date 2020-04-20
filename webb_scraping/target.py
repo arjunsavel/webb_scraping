@@ -26,7 +26,7 @@ class Target:
         :aliases: (list of strings) names by which the target is known in other catalogs.
         :input_name: (str) name of target you're interested in.
         :webb_approved: (bool) whether or not the target has been included in approved webb program.
-        :HST_approved: (bool) whether or not the target has been included in a public HST program.
+        :hst_approved: (bool) whether or not the target has been included in a public HST program.
         :webb_proposal_link: (list of strings) if there are associated JWST proposals, these
                               are the associated URLs.
         :webb_proposal_names: (list of strings) if there are associated JWST proposals, these
@@ -45,22 +45,18 @@ class Target:
         
         
     """
-    aliases = []
-    input_name = None
-    webb_approved = None
-    hst_approved = None
-    webb_proposal_links = []
-    webb_proposal_names = []
-    hst_data = {}
-    exoplanet_archive_data = {}
-    arxiv_links = []
-    planet_properties = None
-    TSM = None
-    ESM = None
     
     def __init__(self, input_name):
         # assert type in input_name?
         self.input_name = input_name
+        self.aliases = []
+        self.webb_approved = None
+        self.hst_approved = None
+        self.webb_proposal_link = []
+        self.webb_proposal_names = []
+        self.hst_data = {}
+        self.exoplanet_archive_data = {}
+        self.arxiv_links = []
         
     def scrape_all(self):
         """
@@ -179,7 +175,7 @@ class Target:
         put into the self.aliases list.
         """
         try:
-            self.aliases += list(Simbad.query_objectids(self.input_name)['ID'])
+            self.aliases = list(Simbad.query_objectids(self.input_name)['ID'])
         except TypeError as e:
             if str(e) == """'NoneType' object is not subscriptable""":
                 print(f'SIMBAD could not resolve {self.input_name}. Attempting to scrape ExoFOP.')
