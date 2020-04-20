@@ -2,6 +2,8 @@ import requests
 
 from tqdm import tqdm
 
+import numpy as np
+
 from bs4 import BeautifulSoup
 from urllib.request import urlretrieve
 import re
@@ -14,7 +16,9 @@ import numpy as np
 from astroquery.mast import Observations
 from astroquery.simbad import Simbad
 
-class Recon:
+from . import calculations as c
+
+class Target:
     """
     Performance of web reconnaisanse on an interesting target.
     
@@ -34,10 +38,10 @@ class Recon:
     
     Methods
     --------
-        __init__ : initializes.
-        scrape_all : master run method.
-        find_aliases : finds aliases.
-        search_webb_site : manual scraping, not preferred.
+        :__init__: initializes.
+        :scrape_all: master run method.
+        :find_aliases: finds aliases.
+        :search_webb_site: manual scraping, not preferred.
         
         
     """
@@ -50,6 +54,9 @@ class Recon:
     hst_data = {}
     exoplanet_archive_data = {}
     arxiv_links = []
+    planet_properties = None
+    TSM = None
+    ESM = None
     
     def __init__(self, input_name):
         # assert type in input_name?
@@ -64,6 +71,43 @@ class Recon:
         self.scrape_arxiv()
         self.scrape_webb_MAST()
         self.scrape_HST()
+       
+    def scrape_planet_properties(self):
+        """
+        Uses exo_MAST to get planet properties from planet_name.
+        
+        Inputs:
+            :planet_name: (str) name of the planet of interest. If provided a star name,
+                            defaults to the most recently discovered planet in the system.
+        """
+        # First, we need to find the "canonical name" of the planet — this is how the parameters
+        # can be subsequently searched.
+        planet_name = self.input_name
+        planet_request = requests.get(
+            f'https://exo.mast.stsci.edu/api/v0.1/exoplanets/identifiers/?name={planet_name}')
+        
+        no_nulls = planet_request.text.replace('null', 'np.nan')
+        correct_trues = no_nulls.replace('true', 'True')
+        correct_bools = correct_trues.replace('false', 'False')
+        planet_names = eval(correct_bools)
+        canonical_name = planet_names['canonicalName']
+
+        properties_request = requests.get(
+            f'https://exo.mast.stsci.edu/api/v0.1/exoplanets/{str.lower(canonical_name)}/properties')
+        
+        no_nulls = properties_request.text.replace('null', 'np.nan')
+        correct_trues = no_nulls.replace('true', 'True')
+        correct_bools = correct_trues.replace('false', 'False')
+        planet_properties = eval(correct_bools)[0]
+        self.planet_properties = planet_properties
+        
+        
+    def run_all_calculations(self, verbose=False):
+        # Need to enforce planet properties
+        TSM = c.TSM(self.planet_properties, verbose=verbose)
+        ESM = c.ESM(self.planet_properties, verbose=verbose)
+        self.TSM, self.ESM = TSM, ESM
+        
         
     def search_webb_site(self, URL):
         """
@@ -210,6 +254,7 @@ class Recon:
         if not self.aliases:
             print('Not checking aliases.')
         raise NotImplementedError
+    
     
     def scrape_exoFOP_aliases(self, ticid):
         """
