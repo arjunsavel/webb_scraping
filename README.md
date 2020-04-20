@@ -4,4 +4,4 @@
 
 Interested in an exoplanet? Wondering if you should submit a JWST proposal for it? Use ```webb_scraping``` to check online.
 
-Our documentation is located on our [![readthedocs page](https://webb-scraping.readthedocs.io/en/latest/pages/about.html)].
+Our documentation is located on our [readthedocs page](https://webb-scraping.readthedocs.io/en/latest/pages/about.html).
