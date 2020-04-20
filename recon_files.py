@@ -14,6 +14,7 @@ from pdfminer.pdfpage import PDFPage
 from io import StringIO
 
 import numpy as np
+import ipdb
 
 from astroquery.mast import Observations
 from astroquery.simbad import Simbad
@@ -79,6 +80,7 @@ class Recon:
     arxiv_links = []
     
     def __init__(self, input_name):
+        # assert type in input_name?
         self.input_name = input_name
         
     def scrape_all(self):
@@ -159,7 +161,16 @@ class Recon:
         Uses astroquery and Simbad to find any aliases of input_name; these are then 
         put into the self.aliases list.
         """
-        self.aliases += list(Simbad.query_objectids(self.input_name)['ID'])
+        try:
+            self.aliases += list(Simbad.query_objectids(self.input_name)['ID'])
+        except TypeError as e:
+            if str(e) == """'NoneType' object is not subscriptable""":
+                print(f'SIMBAD could not resolve {self.input_name}. Attempting to scrape ExoFOP.')
+                if self.input_name[:3] != 'TIC':
+                      print(f'Could not scrape {self.input_name}; please try again after changing input_name to a TICID.')
+                else:
+                      self.scrape_exoFOP_aliases(self.input_name[5:])
+            
     
     def scrape_HST(self):
         """
@@ -226,6 +237,20 @@ class Recon:
         if not self.aliases:
             print('Not checking aliases.')
         raise NotImplementedError
+    
+    def scrape_exoFOP_aliases(self, ticid):
+        """
+        This manually scrapes exoFOP for aliases, given a TICID.
+        """
+        URL = f'https://exofop.ipac.caltech.edu/tess/target.php?id={ticid}'
+        page = requests.get(URL)
+        soup = BeautifulSoup(page.content, 'html.parser')
+        aliases = soup.find_all('table')[7].td.string.split(', ')
+        aliases_formatted = [a if a[0] != ' ' else a[1:] for a in aliases]
+        aliases_to_add = [a for a in \
+                          tqdm(aliases_formatted, leave=True, position=0, desc='Checking aliases to add') \
+                          if a not in self.aliases]
+        self.aliases += aliases_to_add
            
         
 def scrape_all_GTO():
