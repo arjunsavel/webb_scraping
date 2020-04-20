@@ -8,13 +8,14 @@ Welcome to webb_scraping's documentation!
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :caption: Getting Started
 
+   pages/about
+   pages/installation
+   pages/using
 
+.. toctree::
+   :maxdepth: 2
+   :caption: Documentation
 
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+   documentation
