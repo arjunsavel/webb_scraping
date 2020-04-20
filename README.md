@@ -1,5 +1,5 @@
 # webb_scraping
-[![Documentation Status](https://readthedocs.org/projects/webb-scraping/badge/?version=latest)](https://webb-scraping.readthedocs.io/en/latest/?badge=latest)
+[![Documentation Status](https://readthedocs.org/projects/webb-scraping/badge/?version=latest)](https://webb-scraping.readthedocs.io/en/latest/?badge=latest) [![Build Status](https://travis-ci.com/arjunsavel/webb_scraping.svg?branch=master)](https://travis-ci.com/arjunsavel/webb_scraping) [![codecov](https://codecov.io/gh/arjunsavel/webb_scraping/branch/master/graph/badge.svg)](https://codecov.io/gh/arjunsavel/webb_scraping)
 
 
 Interested in an exoplanet? Wondering if you should submit a JWST proposal for it? Use ```webb_scraping``` to check online.
