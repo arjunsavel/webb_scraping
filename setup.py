@@ -75,7 +75,7 @@ if __name__ == "__main__":
         long_description=read("README.md"),
         long_description_content_type="text/x-rst",
         packages=PACKAGES,
-        package_dir={"": "webb_scraping"},
+        package_dir={"": "."},
         zip_safe=False,
         classifiers=CLASSIFIERS,
         install_requires=INSTALL_REQUIRES,
