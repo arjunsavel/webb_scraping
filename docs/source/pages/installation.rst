@@ -1,7 +1,7 @@
 Installation
 ============
 
-webb_scraping, as of now, does not include an automated testing suite; however, `this is an issue that will soon be fixed<https://github.com/arjunsavel/webb_scraping/issues/3>`_!
+webb_scraping, as of now, does not include an automated testing suite; however, `this is an issue that will soon be fixed <https://github.com/arjunsavel/webb_scraping/issues/3>`_!
 
 Installing from source
 -----------------------
