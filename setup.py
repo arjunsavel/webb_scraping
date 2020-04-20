@@ -10,7 +10,7 @@ from setuptools import setup, find_packages
 
 ###################################################################
 
-NAME = "attrs"
+NAME = "webb_scraping"
 PACKAGES = find_packages(where=".")
 META_PATH = os.path.join("webb_scraping", "__init__.py")
 CLASSIFIERS = [
@@ -28,7 +28,8 @@ CLASSIFIERS = [
     'Topic :: Scientific/Engineering :: Astronomy'
 
 ]
-INSTALL_REQUIRES = ["pdfminer", "tqdm", "numpy", "astroquery", "bs4", "requests"]
+INSTALL_REQUIRES = ["tqdm", "numpy", "astroquery", "bs4", "requests"]
+REQUIRES = ["tqdm", "numpy", "astroquery", "bs4", "requests"]
 
 ###################################################################
 
@@ -73,7 +74,7 @@ if __name__ == "__main__":
         maintainer_email=find_meta("email"),
 	    package_data={'': ['README.md', 'LICENSE']},
         long_description=read("README.md"),
-        long_description_content_type="text/x-rst",
+        long_description_content_type="text/markdown",
         packages=PACKAGES,
         package_dir={"": "."},
         zip_safe=False,
