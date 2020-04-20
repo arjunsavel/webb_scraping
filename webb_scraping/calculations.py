@@ -1,5 +1,4 @@
 import numpy as np
-import pandas as pd
 from tqdm import tqdm
 from math import sqrt
 
@@ -99,5 +98,4 @@ def TSM(planet_properties, verbose=False):
     if verbose:
         print(f'scale factor: {scale_factor}. Rp: {rp}. Teq: {Teq}. \
               M: {M}. Rstar: {rstar}. mj: {mj}. Tstar: {Tstar}. a: {a}')
-#     ipdb.set_trace()
     return scale_factor * rp**3 * Teq / (M * rstar **2 ) * pow(10, -mj/5)
