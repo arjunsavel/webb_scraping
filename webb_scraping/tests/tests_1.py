@@ -33,7 +33,7 @@ class TestWebb(unittest.TestCase):
 		expected_stars_webb_approved = [True]
 		for star in stars:
 			star_target = t.Target(star)
-			star_target.scape_webb_MAST()
+			star_target.scrape_webb_MAST()
 			stars_webb_approved.append(star_target.webb_approved)
 
 		self.assertItemsEqual(stars_webb_approved, expected_stars_webb_approved)

@@ -16,7 +16,7 @@ import numpy as np
 from astroquery.mast import Observations
 from astroquery.simbad import Simbad
 
-from . import calculations as c
+import calculations as c
 
 class Target:
     """
