@@ -46,10 +46,10 @@ release = '0.1.0-beta'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 
-autodoc_mock_imports = ["pdfminer"]
+# autodoc_mock_imports = ["pdfminer"]
 
-for mod_name in autodoc_mock_imports:
-   sys.modules[mod_name] = mock.Mock() 
+# for mod_name in autodoc_mock_imports:
+#    sys.modules[mod_name] = mock.Mock() 
 
 extensions = [
     'sphinx.ext.autodoc',
