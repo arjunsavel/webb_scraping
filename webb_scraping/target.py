@@ -16,7 +16,7 @@ import numpy as np
 from astroquery.mast import Observations
 from astroquery.simbad import Simbad
 
-import calculations as c
+from . import calculations as c
 
 class Target:
     """
@@ -57,6 +57,7 @@ class Target:
         self.hst_data = {}
         self.exoplanet_archive_data = {}
         self.arxiv_links = []
+        self.planet_properties = None
         
     def scrape_all(self):
         """
@@ -67,6 +68,7 @@ class Target:
         self.scrape_arxiv()
         self.scrape_webb_MAST()
         self.scrape_HST()
+        self.scrape_planet_properties()
        
     def scrape_planet_properties(self):
         """
@@ -99,7 +101,8 @@ class Target:
         
         
     def run_all_calculations(self, verbose=False):
-        # Need to enforce planet properties
+        if not self.planet_properties:
+            self.scrape_planet_properties()
         TSM = c.TSM(self.planet_properties, verbose=verbose)
         ESM = c.ESM(self.planet_properties, verbose=verbose)
         self.TSM, self.ESM = TSM, ESM

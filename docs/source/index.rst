@@ -17,7 +17,9 @@ Welcome to webb_scraping's documentation!
    :maxdepth: 2
    :caption: Tutorials
    
-   ../../tutorials/scrape_example.ipynb
+   ../../tutorials/check_webb_example.ipynb
+   ../../tutorials/check_literature_example.ipynb
+   ../../tutorials/check_observable_example.ipynb
 
 .. toctree::
    :maxdepth: 2
