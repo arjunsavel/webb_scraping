@@ -7,11 +7,30 @@ from astropy import units as u
 
 
 def kepler_a(m1, m2, P):
-    """returns semimajor axis in meters given period in seconds"""
+    """Computes semimajor axis with Kepler's Third Law..
+    Inputs:
+        :m1: (float) mass of first body (kg)
+        :m2: (float) mass of second body (kg)
+        :P: (float) orbital period (s)
+
+    Outputs:
+        :a: (float) semimajor axis of the orbit (m)
+    """
     G = 6.67e-11
-    return pow(P**2 * G * (m1 + m2) / (4*np.pi**2), 1/3)
+    a = pow(P**2 * G * (m1 + m2) / (4*np.pi**2), 1/3)
+    return a
 
 def blackbody(wav, T):
+    """
+    Computes the blackbody curve at a given wavelength.
+
+    Inputs:
+        :wav: (float) wavelength of interest (m)
+        :T: (float) temperature of body in question
+
+    Outputs:
+        :intensity: (float) value of blackbody curve.
+    """
     h = 6.626e-34
     c = 3.0e+8
     k = 1.38e-23
@@ -22,8 +41,20 @@ def blackbody(wav, T):
 
 def ESM(planet_properties, verbose=False):
     """
-    Takes in row of dataframe, computes ESM (Kempton+18) for it.
+    Takes in planet properties, computes ESM (Kempton+ 18) for it.
     Need to double-check units?
+
+    Inputs:
+        :planet_properties: (dict) contains planet orbital_distance (in AU),
+                            stellar radius (solar radii), stellar effective
+                            temperature (K), planet mass (Jupiter masses),
+                            orbital period (days), stellar K band magnitude (mag),
+                            and planet-star radius ratio.
+        :verbose: (bool) False. Dtermines whettehr properties are printed after computaiton.
+
+    Outputs:
+        :ESM: (float) SNR proxy for emission spectroscopy introduced by Kempton+ 18.
+
     """
     a = planet_properties['orbital_distance'] # in AU
     a *= 215.032 # in solar radii
@@ -39,7 +70,6 @@ def ESM(planet_properties, verbose=False):
         a = kepler_a(mstar, M_kg, P)
         a /= 696.34e6 # back to solar radii
     mk = planet_properties['Kmag'] # K band
-    Tstar = planet_properties['Teff'] # in Kelvin
     Teq = Tstar * sqrt(rstar/a) * pow(1/4, 1/4)
     Tday = 1.1 * Teq
     rp_rstar = planet_properties['Rp/Rs'] 
@@ -51,13 +81,25 @@ def ESM(planet_properties, verbose=False):
     freq_test = c/wavelength # in Hertz
     bb_star = blackbody(7.5e-6, Tstar)
     bb_planet = blackbody(7.5e-6, Tday)
+    ESM = 4.29e6 * (bb_planet / bb_star) * pow(rp_rstar, 2) * pow(10, -mk/5)
         
-    return 4.29e6 * (bb_planet / bb_star) * pow(rp_rstar, 2) * pow(10, -mk/5)
+    return ESM
 
 
 def TSM(planet_properties, verbose=False):
     """
     Takes in row of dataframe, computes TSM (Kempton+18) for it.
+
+    Inputs:
+        :planet_properties: (dict) contains planet orbital_distance (in AU),
+                            stellar radius (solar radii), stellar effective
+                            temperature (K), planet mass (Jupiter masses),
+                            stellar mass (solar masses), orbital period (days), 
+                            stellar J band magnitude (mag), and planet-star radius ratio.
+        :verbose: (bool) False. Dtermines whettehr properties are printed after computaiton.
+
+    Outputs:
+        :ESM: (float) SNR proxy for emission spectroscopy introduced by Kempton+ 18.
     """
     # turn semimajor axis from AU to solar radii for exoplanet archive
     a = planet_properties['orbital_distance'] # in AU
@@ -98,4 +140,6 @@ def TSM(planet_properties, verbose=False):
     if verbose:
         print(f'scale factor: {scale_factor}. Rp: {rp}. Teq: {Teq}. \
               M: {M}. Rstar: {rstar}. mj: {mj}. Tstar: {Tstar}. a: {a}')
-    return scale_factor * rp**3 * Teq / (M * rstar **2 ) * pow(10, -mj/5)
+    TSM = scale_factor * rp**3 * Teq / (M * rstar **2 ) * pow(10, -mj/5)
+    return TSM
+    
