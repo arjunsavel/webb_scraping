@@ -47,7 +47,7 @@ class Target:
     """
     
     def __init__(self, input_name):
-        # assert type in input_name?
+        # instantiates object
         self.input_name = input_name
         self.aliases = []
         self.webb_approved = None
@@ -72,11 +72,8 @@ class Target:
        
     def scrape_planet_properties(self):
         """
-        Uses exo_MAST to get planet properties from planet_name.
-        
-        Inputs:
-            :planet_name: (str) name of the planet of interest. If provided a star name,
-                            defaults to the most recently discovered planet in the system.
+        Uses exo_MAST to get planet properties for this target.
+
         """
         # First, we need to find the "canonical name" of the planet — this is how the parameters
         # can be subsequently searched.
@@ -101,6 +98,10 @@ class Target:
         
         
     def run_all_calculations(self, verbose=False):
+        """
+        Calculates the TSM and ESM (Kempton+ 18) for this target, using known planet
+        properties.
+        """
         if not self.planet_properties:
             self.scrape_planet_properties()
         TSM = c.TSM(self.planet_properties, verbose=verbose)
@@ -191,7 +192,8 @@ class Target:
     def scrape_HST(self):
         """
         Checks MAST for the target's relevant HST proposals/data.
-        Need to fill in the other stuff
+        Modifies hst_approved: if there are observations, sets it to True; otherwise False.
+        Appends links to relevant HST data to hst_data.
         """
         obs = Observations.query_object(self.input_name, radius=".02 deg") # should work. waliases
         HST_obs = obs[obs['obs_collection']=='HST']
@@ -205,7 +207,8 @@ class Target:
     def scrape_webb_MAST(self):
         """
         Checks MAST for the target's relevant JWST proposals/data.
-        Need to fill in the other stuff
+        Modifies webb_approved: if there are relevant proposals, sets it to True; otherwise False.
+        Appends the names of these proposals to webb_proposal_names.
         """
         obs = Observations.query_object(self.input_name, radius=".02 deg") # should work. waliases
         JWST_obs = obs[obs['obs_collection']=='JWST']
@@ -220,8 +223,8 @@ class Target:
     
     def scrape_arxiv(self, progress=False):
         """
-        Searches through arxiv abstracts for the target.
-        
+        Searches through arXiv abstracts for the target.
+        Appends links of relevant arXiv pdfs to arxiv_links.
         If progress=True, outputs a tqdm progress bar.
         """
         if self.aliases:
