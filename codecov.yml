@@ -4,5 +4,6 @@ coverage:
   round: nearest
   range: "40...90"
   ignore:
-    - "*__init__.py"
-    - "*tests/"
+    - "__init__.py"
+    - "webb_scraping/tests/tests_1.py"
+    - "webb_scraping/__init__.py"
