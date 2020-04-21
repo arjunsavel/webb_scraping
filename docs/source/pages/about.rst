@@ -11,6 +11,9 @@ About webb_scraping
 .. image:: https://travis-ci.com/arjunsavel/webb_scraping.svg?branch=master
   :target: https://travis-ci.com/github/arjunsavel/webb_scraping
 
+.. image:: https://badge.fury.io/py/webb-scraping.svg
+    :target: https://badge.fury.io/py/webb-scraping
+
 
 
 The webb_scraping code is intended to supplement explorations of exoplanet data for James Webb purposes. The program pulls from a variety of sources (`ExoFOP-TESS <https://exofop.ipac.caltech.edu/tess/>`_, `MAST <https://archive.stsci.edu/index.html>`_, and `SIMBAD <https://simbad.u-strasbg.fr/simbad/sim-fid>`_) to aggregate data relevant to a potential JWST proposal.
