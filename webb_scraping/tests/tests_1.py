@@ -38,6 +38,9 @@ class TestWebb(unittest.TestCase):
 
 		self.assertListEqual(stars_webb_approved, expected_stars_webb_approved)
 
+
+class TestHST(unittest.TestCase):
+
 	def test_hst_approved(self):
 		"""
 		Take a random assortment of stars and ensure that they are
@@ -51,6 +54,6 @@ class TestWebb(unittest.TestCase):
 		for star in stars:
 			star_target = t.Target(star)
 			star_target.scrape_HST()
-			stars_webb_approved.append(star_target.hst_approved)
+			stars_hst_approved.append(star_target.hst_approved)
 
 		self.assertListEqual(stars_hst_approved, expected_stars_hst_approved)
