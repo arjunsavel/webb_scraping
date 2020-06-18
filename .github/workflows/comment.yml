@@ -11,4 +11,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           msg: "Check out this message!"
-          check_for_duplicate_msg: false  # OPTIONAL 
+          check_for_duplicate_msg: true  # OPTIONAL 
