@@ -10,5 +10,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          msg: "Check out this message!"
+          msg: "Check out this message! \n
+                This is a line break in the message \n
+                [] here is a box to fill out"
           check_for_duplicate_msg: true  # OPTIONAL 
