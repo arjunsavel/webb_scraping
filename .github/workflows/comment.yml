@@ -5,7 +5,7 @@ jobs:
     name: sample comment
     runs-on: ubuntu-latest
     steps:
-      - name: comment PR
+      - name: comment PR test
         uses: unsplash/comment-on-pr@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
